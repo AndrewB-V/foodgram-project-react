@@ -1,12 +1,23 @@
-FROM python:3.7-slim
+# pull official base image
+FROM python:3.9-alpine
 
-WORKDIR /code
+RUN mkdir /usr/src/app
 
-COPY requirements.txt .
+# set work directory
+WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get upgrade -y && \
-    pip install --upgrade pip && pip install -r requirements.txt
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY . ./
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
 
-CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000" ]
+# install dependencies
+RUN pip3 install pip --upgrade
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy project
+COPY . .

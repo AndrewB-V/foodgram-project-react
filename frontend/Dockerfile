@@ -1,8 +1,9 @@
 # build env
-FROM node:13.12.0-alpine as build
+FROM node:14-alpine as build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn
 COPY . ./
-RUN npm run build
+RUN yarn run
 CMD cp -r build result_build

@@ -1,17 +1,63 @@
 version: '3.3'
 services:
+  foodgram-db:
+    image: postgres:13.0-alpine
+    container_name: "foodgram-db"
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../backend/.env
+
+  foodgram-web:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: "web"
+    restart: on-failure
+    command: >
+        sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - ../backend/:/usr/src/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - foodgram-db
 
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+    container_name: "frontend"
     volumes:
       - ../frontend/:/app/result_build/
-  nginx:
-    image: nginx:1.19.3
+      - node-modules:/app/result_build/node_modules
+    networks:
+      - dev
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    command:
+      npm start
+
+  foodgram-nginx:
+    image: nginx:1.21-alpine
+    container_name: "foodgram-nginx"
     ports:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
+      - ../backend/static:/usr/src/app/static/
+    depends_on:
+      - foodgram-web
+
+volumes:
+  postgres_data:
+  node-modules:
+
+networks:
+  dev:
