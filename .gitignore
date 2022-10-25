@@ -134,6 +134,7 @@ dmypy.json
 # folders with static and media
 backend_static/
 backend_media/
+node_modules
 
 # migrations
 # migrations/
