@@ -51,8 +51,15 @@ ALLOWED_HOSTS=
 ## Запуск проекта через Docker
 - В папке infra выполнить команду, что бы собрать контейнер:
 ```bash
-sudo docker-compose up -d
+sudo docker-compose up -d --build
 ```
+или
+- В корне проекта выполнить команду, что бы собрать контейнер:
+```bash
+sudo docker-compose -f infra/docker-compose.yml up -d --build
+```
+
+_**Дальше ничего делать не надо, все стартует автоматически.**_
 
 Для доступа к контейнеру выполните следующие команды:
 

@@ -12,7 +12,11 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+    && apk add postgresql-dev gcc python3-dev musl-dev curl
+
+# for wait other containers
+ADD     https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait ./wait
+RUN     chmod +x ./wait
 
 # install dependencies
 RUN pip3 install pip --upgrade
