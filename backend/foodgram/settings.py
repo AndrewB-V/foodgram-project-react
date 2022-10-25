@@ -7,7 +7,7 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = str(os.getenv("DJANGO_SECRET_KEY", default="some_key"))
-DEBUG = bool(os.getenv("DJANGO_DEBUG", default=False))
+DEBUG = bool(int(os.getenv("DJANGO_DEBUG", default=False)))
 ALLOWED_HOSTS = list(os.getenv("DJANGO_ALLOWED_HOSTS", default=["*"]).split(","))
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
