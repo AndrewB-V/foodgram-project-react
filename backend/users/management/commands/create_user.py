@@ -5,10 +5,10 @@ from users.models import User
 
 class Command(BaseCommand):
     user_data = {
-        "username": "dima",
-        "email": "dima@admin.suka.top",
-        "first_name": "Dima",
-        "last_name": "DIMA BLAD HUILI NE YASNO",
+        "username": "andrew",
+        "email": "andrew@andrew.ru",
+        "first_name": "Andrew",
+        "last_name": "AndrewB",
     }
     user_password = "123qwe!@#"
 

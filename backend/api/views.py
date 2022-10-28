@@ -53,7 +53,7 @@ class RecipeViewSet(BaseRecipeViewSet):
     pagination_class = CustomListPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    permission_classes = (AuthorOrReadOnly)
+    permission_classes = (AuthorOrReadOnly,)
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[permissions.IsAuthenticated])

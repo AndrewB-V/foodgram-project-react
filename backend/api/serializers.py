@@ -159,17 +159,14 @@ class RecipeSerializer(BaseRecipeSerializer):
 
         recipe.tags.set(tags)
 
-        ings_to_create = []
         for ingredient in ingredients:
             ingredient_obj = get_object_or_404(Ingredient,
                                                id=ingredient['id'])
-            ings_to_create.append(ingredient_obj)
-
-        RecipeIngredient.objects.bulk_create(
-            recipe_id=recipe,
-            ingredient=ings_to_create,
-            amount=ingredient['amount']
-        )
+            RecipeIngredient.objects.get_or_create(
+                recipe_id=recipe,
+                ingredient=ingredient_obj,
+                amount=ingredient['amount']
+            )
 
         return recipe
 
