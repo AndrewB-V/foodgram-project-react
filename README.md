@@ -31,6 +31,13 @@ sudo docker-compose -f infra/docker-compose.yml up -d --build
 
 _**Дальше ничего делать не надо, все стартует автоматически.**_
 
+- users:
+почта  - vika@vika.ru
+пароль - 123qwe!@#
+
+почта  - nik@nik.ru
+пароль - 123qwe!@#
+
 
 
 Автор: [Бондаренко Андрей](https://github.com/AndrewB-V)
