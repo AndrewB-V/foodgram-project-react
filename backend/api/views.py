@@ -1,4 +1,3 @@
-from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -21,7 +20,6 @@ from .permissions import AuthorOrReadOnly
 from .serializers import (CustomUserCreateSerializer, CustomUserSerializer,
                           FollowSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer)
-from .utils import create_report
 
 
 class BaseRecipeViewSet(viewsets.ModelViewSet, AddDelMixin):
@@ -69,14 +67,16 @@ class RecipeViewSet(BaseRecipeViewSet):
         detail=False, url_path='download_shopping_cart',
         permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
-        user = request.user
         ingredients = RecipeIngredient.objects.filter(
-            recipe_id__cart_recipe__user=user).values_list(
-            'ingredient__name',
-            'ingredient__measurement_unit').annotate(Sum('amount'))
-        shopping_cart = 'Ваш список покупок:\n\n'
-        create_report(shopping_cart, ingredients)
-        filename = "shopping_cart.txt"
+            recipe_id__cart_recipe__user=request.user).values(
+            'ingredient__name', 'ingredient__measurement_unit', 'amount'
+        )
+        shopping_cart = '\n'.join([
+            f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
+            f'{ingredient["ingredient__measurement_unit"]}'
+            for ingredient in ingredients
+        ])
+        filename = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
